@@ -1,5 +1,5 @@
 from itertools import combinations
-#import numpy as np
+import numpy as np
 
 def add_vectors(v1, v2):
     return list(map(lambda x, y: x + y, v1, v2))
@@ -99,7 +99,5 @@ while True:
     
     i += 1
 
-#frequencies = list(set(frequencies))
-#print(frequencies)
-#test = np.lcm.reduce([freq_x, freq_y, freq_z])
-#print(test)
+result = np.lcm.reduce([np.uint64(freq_x), np.uint64(freq_y), np.uint64(freq_z)])
+print(result)
