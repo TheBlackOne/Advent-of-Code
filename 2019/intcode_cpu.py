@@ -17,7 +17,7 @@ class IntcodeCPU:
     def __init__(self, _program):
         self.instruction_pointer = 0
         self.program = _program
-        self.inputs = queue.Queue(maxsize=99)
+        self.inputs = queue.Queue(maxsize=999)
         self.output = None
         self.paused = False
         self.halted = False
