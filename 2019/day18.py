@@ -100,34 +100,7 @@ def fill_distances():
             f.write('\n')
         f.close()
 
-def get_path_len(key_just_found, _key_locations, _length_so_far):
-    global min_total_length
-    
-    #if not key_just_found is None:
-    del _key_locations[key_just_found]
-
-    if len(_key_locations) == 0:
-        if _length_so_far < min_total_length:
-            min_total_length = _length_so_far
-        print("all keys found! total length: {}".format(_length_so_far))
-        return
-
-    for key in _key_locations.keys():
-        if key_just_found == "":
-            print(key)
-
-        door_blocking, path_length = key_combo_distances[(key_just_found, key)]
-        if not door_blocking is None:
-            door_blocking = door_blocking.lower()
-            if key == door_blocking or door_blocking in _key_locations.keys():
-                continue
-
-        path_length -= 1
-        if path_length + _length_so_far < min_total_length:
-            new_key_locations = copy.deepcopy(_key_locations)
-            get_path_len(key, new_key_locations, path_length + _length_so_far)
-
-def bfs2(_nodes, _step):
+def search(_nodes, _step):
     global min_total_length
     for node in _nodes:
         if len(node.path) >= 26:
@@ -174,40 +147,12 @@ def bfs2(_nodes, _step):
             for i in range(_step):
                 print(' ', end="")
             print("step: {}, nodes: {}/{}, skipped di.: {} skipped do.: {} min: {}".format(_step, len(chunk), len(nodes), skipped_distance, skipped_doors, min_total_length))
-            bfs2(chunk, _step + 1)
-
-def bfs(_key, _distance, _path, _step):
-    global min_total_length
-    if _step >= 27:
-        if _distance < min_total_length:
-            min_total_length = _distance
-            print("\tnew min distance: {}".format(_distance))
-        return
-
-    keys_collected = []
-    path = _path
-    for key in key_locations.keys():
-        if _key != key and key not in path:
-            distance_key = (_key, key)
-            door, distance = key_combo_distances[distance_key]
-            if door is None or door.lower() in path:
-                keys_collected.append((key, _distance + distance - 1))
-                path = path + key
-
-    keys_collected = sorted(keys_collected, key=lambda k: k[1])
-    for key, distance in keys_collected:
-        if _key == "":
-            print(key)
-        if distance < min_total_length:
-            bfs(key, distance, _path + key, _step + 1)
-
+            search(chunk, _step + 1)
 
 
 fill_distances()
-#get_path_len("", key_locations, 0)
 keys_to_collect = ''.join(key_locations.keys()).replace('@', '')
 start_node = Node("", 0, "@", keys_to_collect)
-#bfs("", 0, "", 1)
-bfs2([start_node], 0)
+search([start_node], 0)
 
 print(min_total_length)
