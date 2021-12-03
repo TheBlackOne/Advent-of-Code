@@ -11,7 +11,6 @@ for line in input:
     input_array.append(row)
 
 def get_rating(input, max = True):
-
     result = ""
 
     numbers_to_keep = numpy.array(input)
@@ -19,14 +18,14 @@ def get_rating(input, max = True):
     col_idx = 0
     while len(numbers_to_keep) > 1:
         col = numbers_to_keep.T[col_idx]
-        oxygen_num_zeroes_ones = numpy.bincount(col)
+        binccount = numpy.bincount(col)
 
         interesting_bit = int(max)
-        search_for = oxygen_num_zeroes_ones.min()
-        if max: search_for = oxygen_num_zeroes_ones.max()
+        search_for = binccount.min()
+        if max: search_for = binccount.max()
 
-        if oxygen_num_zeroes_ones.min() != oxygen_num_zeroes_ones.max():
-            interesting_bit = numpy.where(oxygen_num_zeroes_ones==search_for)[0][0]
+        if binccount.min() != binccount.max():
+            interesting_bit = numpy.where(binccount==search_for)[0][0]
 
         idx_to_keep = numpy.where(col==interesting_bit)[0]
         numbers_to_keep = numpy.array([numbers_to_keep[idx] for idx in idx_to_keep])
