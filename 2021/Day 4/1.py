@@ -1,49 +1,34 @@
 import numpy
 
-def calc_score(winning_board, winning_marked_board, winning_number):
-    result = 0
-    score_matrix = numpy.multiply(winning_board, numpy.invert(winning_marked_board))
-    result = numpy.sum(score_matrix) * winning_number
-    return result
-
 numbers_to_draw = []
 boards = []
-marked_boards = []
 
-input = []
 with open('input.txt', 'r') as file:
-    new_board = []
-    new_marked_board = []
+    input = file.read().split('\n\n')
 
-    for line in [_.strip() for _ in file.readlines()]:
-        if ',' in line:
-            numbers_to_draw = [int(_) for _ in line.split(',')]
-        elif len(line) == 0:
-            if len(new_board) > 0:
-                boards.append(new_board)
-                marked_boards.append(new_marked_board)
-                new_board = []
-                new_marked_board = []
-        else:
-            new_board.append([int(_) for _ in line.split()])
-            new_marked_board.append([False for _ in range(0, len(new_board[-1]))])
-        
-    boards.append(new_board)
-    marked_boards.append(new_marked_board)
+    numbers_to_draw = [int(_) for _ in input[0].split(',')]
 
-boards = numpy.array(boards)
-marked_boards = numpy.array(marked_boards)
+    for board in input[1:]:
+        new_board = [[int(number) for number in row.split()] for row in board.split('\n')]
+        boards.append(new_board)
 
-score = 0
+# array needs to be of type float in order to use numpy.nan later
+boards = numpy.array(boards).astype('float')
+
+score = None
+
 for number in numbers_to_draw:
     coords = numpy.where(boards == number)
     for board_idx, row_idx, col_idx in zip(*coords):
-        marked_boards[board_idx][row_idx][col_idx] = True
 
-        if all(marked_boards[board_idx][row_idx]) or all(marked_boards[board_idx].T[col_idx]):
-            score = calc_score(boards[board_idx], marked_boards[board_idx], number)
+        # numpy.nan is used to mark a cell
+        boards[board_idx][row_idx][col_idx] = numpy.nan
+
+        if numpy.isnan(boards[board_idx][row_idx]).all() or numpy.isnan(boards[board_idx].T[col_idx]).all():
+            # the nansum() variant counts numpy.nan values as 0, thus skipping marked cells
+            score = numpy.nansum(boards[board_idx]) * number
             break
 
-    if score > 0: break
+    if score is not None: break
 
-print("Score is: {}".format(score))
+print("Score is: {}".format(int(score)))
