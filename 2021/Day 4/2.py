@@ -27,6 +27,9 @@ with open('input.txt', 'r') as file:
         else:
             new_board.append([int(_) for _ in line.split()])
             new_marked_board.append([False for _ in range(0, len(new_board[-1]))])
+            
+    boards.append(new_board)
+    marked_boards.append(new_marked_board)
 
 boards = numpy.array(boards)
 marked_boards = numpy.array(marked_boards)
