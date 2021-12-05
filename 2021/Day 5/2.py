@@ -1,6 +1,7 @@
 import numpy as np
 
 lines = []
+max_dimension = 0
 
 with open('input.txt', 'r') as file:
     for line in [line.strip() for line in file.readlines()]:
@@ -8,32 +9,19 @@ with open('input.txt', 'r') as file:
         x1, y1 = [int(_) for _ in start.split(',')]
         x2, y2 = [int(_) for _ in end.split(',')]
 
-        if x1 == x2 or y1 == y2 or abs(x1 - x2) == abs(y1 - y2):
-            lines.append([(x1, y1), (x2, y2)])
+        delta_x = abs(x1 - x2)
+        delta_y = abs(y1 - y2)
 
-lines = np.array(lines)
-lines_map = np.zeros((lines.max() + 1, lines.max() + 1))
+        if delta_x == 0 or delta_y == 0 or delta_x == delta_y:
+            line_coords = np.linspace([x1, y1], [x2, y2], max(delta_x, delta_y) + 1).astype(int)
+            max_dimension = max(max_dimension, line_coords.max())
+            lines.append(line_coords)
 
-for start, end in lines:
-    x1, y1 = start
-    x2, y2 = end
+lines_map = np.zeros((max_dimension + 1, max_dimension + 1))
 
-    step_x = 0
-    if x2 > x1: step_x = 1
-    elif x2 < x1: step_x = -1
-
-    step_y = 0
-    if y2 > y1: step_y = 1
-    elif y2 < y1: step_y = -1
-
-    delta = max(abs(x2 - x1), abs(y2 - y1))
-    x = x1
-    y = y1
-
-    for _ in range(0, delta + 1):
+for line_coords in lines:
+    for x, y in line_coords:
         lines_map[x, y] += 1
-        x += step_x
-        y += step_y
 
 result = len(np.where(lines_map > 1)[0])
 
