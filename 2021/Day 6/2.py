@@ -18,5 +18,6 @@ for _ in range(0, 256):
     num_new_born = lanternfish[-1]
     lanternfish[8] = num_new_born
     lanternfish[6] += num_new_born
+    lanternfish[-1] = 0
 
 print(sum(lanternfish.values()))
