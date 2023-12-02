@@ -10,7 +10,7 @@ Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green"""
 #    input = f.read()
 
 def processLine(line: str):
-    max_cubes = {
+    min_cubes = {
         'red': None,
         'green': None,
         'blue': None
@@ -23,10 +23,10 @@ def processLine(line: str):
         for count_color in count_colors:
             (count, color) = count_color.split(' ')
             count = int(count)
-            if max_cubes[color] == None or max_cubes[color] < count:
-                max_cubes[color] = count
+            if min_cubes[color] == None or min_cubes[color] < count:
+                min_cubes[color] = count
             
-    return math.prod(max_cubes.values())
+    return math.prod(min_cubes.values())
 
 if __name__ == "__main__":
     sum = 0
