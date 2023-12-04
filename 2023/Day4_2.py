@@ -1,3 +1,5 @@
+from tqdm import tqdm
+
 input = """Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
 Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19
 Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1
@@ -6,23 +8,32 @@ Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36
 Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11"""
 
 # with open('input.txt') as f:
-#   input = f.read()
+#  input = f.read()
+
+num_winners_cache = {}
 
 
 def process_card(card_list, card_index, card_counter):
     card_counter += 1
-    card_line = card_list[card_index]
+    num_winners = 0
 
-    header, numbers = card_line.split(': ')
-    # print(f"Processing card {header}")
+    if card_index in num_winners_cache.keys():
+        num_winners = num_winners_cache[card_index]
+    else:
+        card_line = card_list[card_index]
 
-    winning_numbers_string, your_numbers_string = numbers.split(' | ')
-    winning_numbers = set(filter(None, winning_numbers_string.split(' ')))
-    your_numbers = set(filter(None, your_numbers_string.split(' ')))
+        header, numbers = card_line.split(': ')
+        # print(f"Processing card {header}")
 
-    winners = list(winning_numbers & your_numbers)
+        winning_numbers_string, your_numbers_string = numbers.split(' | ')
+        winning_numbers = set(filter(None, winning_numbers_string.split(' ')))
+        your_numbers = set(filter(None, your_numbers_string.split(' ')))
+
+        num_winners = len(list(winning_numbers & your_numbers))
+        num_winners_cache[card_index] = num_winners
+
     new_card_indizes = list(
-        range(card_index + 1, card_index + len(winners) + 1))
+        range(card_index + 1, card_index + num_winners + 1))
     for new_card_index in new_card_indizes:
         card_counter = process_card(card_list, new_card_index, card_counter)
 
@@ -32,7 +43,7 @@ def process_card(card_list, card_index, card_counter):
 if __name__ == "__main__":
     card_counter = 0
     card_list = input.splitlines()
-    for card_index in range(0, len(card_list)):
+    for card_index in tqdm(range(0, len(card_list))):
         card_counter = process_card(card_list, card_index, card_counter)
 
     print(f"Result: {card_counter}")
