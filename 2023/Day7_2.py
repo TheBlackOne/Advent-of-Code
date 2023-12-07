@@ -1,3 +1,5 @@
+from collections import Counter
+
 input = """32T3K 765
 T55J5 684
 KK677 28
@@ -8,6 +10,17 @@ QQQJA 483"""
 #    input = f.read()
 
 labels = ['A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J']
+
+# (num_groups, biggest_group)
+types = [
+    (1, 5),  # Five of a kind
+    (2, 4),  # Four of a kind
+    (2, 3),  # Full house
+    (3, 3),  # Three of a kind
+    (3, 2),  # Two pair
+    (4, 2),  # One pair
+    (5, 1)  # High card
+]
 
 hands = []
 
