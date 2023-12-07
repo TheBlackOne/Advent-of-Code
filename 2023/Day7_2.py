@@ -4,12 +4,13 @@ KK677 28
 KTJJT 220
 QQQJA 483"""
 
-#with open('input.txt') as f:
+# with open('input.txt') as f:
 #    input = f.read()
 
 labels = ['A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J']
 
 hands = []
+
 
 def determine_type(cards):
     cards = ''.join(sorted(cards, reverse=True,))
@@ -46,6 +47,7 @@ def determine_type(cards):
 
     print()
 
+
 if __name__ == "__main__":
     for line in input.splitlines():
         cards, bid = line.split()
@@ -62,13 +64,13 @@ if __name__ == "__main__":
             hand_type = determine_type(cards)
         hands.append((cards, bid, hand_type))
 
-hands = sorted(hands, 
-    reverse=True, 
-    key=lambda x: (x[2], labels.index(x[0][0]), labels.index(x[0][1]), labels.index(x[0][2]), labels.index(x[0][3]), labels.index(x[0][4])))
+    hands = sorted(hands,
+                   reverse=True,
+                   key=lambda x: (x[2], labels.index(x[0][0]), labels.index(x[0][1]), labels.index(x[0][2]), labels.index(x[0][3]), labels.index(x[0][4])))
 
-winnings = 0
-for rank, hand in enumerate(hands):
-    winnings += int(hand[1]) * (rank + 1)
-    #print(f"Hand: {hand} rank: {rank + 1} bid: {hand[1]}")
+    winnings = 0
+    for rank, hand in enumerate(hands):
+        winnings += int(hand[1]) * (rank + 1)
+        # print(f"Hand: {hand} rank: {rank + 1} bid: {hand[1]}")
 
-print(f"Winnings: {winnings}")
+    print(f"Winnings: {winnings}")
