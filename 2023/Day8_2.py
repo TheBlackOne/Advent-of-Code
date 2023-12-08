@@ -1,4 +1,3 @@
-from functools import reduce
 from math import lcm
 
 input = """LR
@@ -54,6 +53,6 @@ if __name__ == "__main__":
             steps += 1
         all_steps.append(steps)
 
-    least = reduce(lcm, all_steps)
+    least = lcm(*all_steps)
 
     print(f"Steps needed: {least}")
