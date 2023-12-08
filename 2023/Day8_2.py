@@ -1,3 +1,4 @@
+from functools import reduce
 from math import lcm
 
 input = """LR
@@ -11,8 +12,8 @@ input = """LR
 22Z = (22B, 22B)
 XXX = (XXX, XXX)"""
 
-# with open('input.txt') as f:
-#   input = f.read()
+#with open('input.txt') as f:
+#    input = f.read()
 
 instructions = []
 node_dict = {}
@@ -53,8 +54,6 @@ if __name__ == "__main__":
             steps += 1
         all_steps.append(steps)
 
-    least = all_steps[0]
-    for step in all_steps[1:]:
-        least = lcm(least, step)
+    least = reduce(lcm, all_steps)
 
     print(f"Steps needed: {least}")
