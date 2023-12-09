@@ -33,7 +33,7 @@ def search_symbol(match, y):
 
 
 def parse_part_numbers(line, y):
-    for match in list(re.finditer(r'\d+', line)):
+    for match in list(re.finditer(r"\d+", line)):
         search_symbol(match, y)
         # print(match.group())
 
@@ -41,7 +41,7 @@ def parse_part_numbers(line, y):
 if __name__ == "__main__":
     y = 0
     for line in input.splitlines():
-        for match in re.finditer(r'[^\d\.]', line):
+        for match in re.finditer(r"[^\d\.]", line):
             symbol_coords.append((match.start(), y))
         y += 1
 

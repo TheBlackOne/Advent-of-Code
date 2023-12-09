@@ -38,14 +38,16 @@ humidity-to-location map:
 seeds = []
 maps = {}
 
+
 def get_destination(source, map_name):
     destination = source
     for destination_start, source_start, num in maps[map_name]:
         if source_start <= source and source <= source_start + num - 1:
             destination = source + destination_start - source_start
             return destination
-    
+
     return destination
+
 
 if __name__ == "__main__":
     categories = input.split("\n\n")
@@ -59,12 +61,12 @@ if __name__ == "__main__":
 
     locations = []
     for seed in seeds:
-        #print(f"Seed: {seed}")
+        # print(f"Seed: {seed}")
         destination = seed
         for category_name, mapping in maps.items():
-            destination = get_destination(destination, category_name) 
-        
+            destination = get_destination(destination, category_name)
+
         locations.append(destination)
-        #print(f"{category_name}: {destination}")
+        # print(f"{category_name}: {destination}")
 
     print(f"Lowest location: {min(locations)}")

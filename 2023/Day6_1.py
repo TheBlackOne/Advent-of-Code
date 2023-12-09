@@ -1,16 +1,16 @@
 input = """Time:      7  15   30
 Distance:  9  40  200"""
 
-#with open('input.txt') as f:
+# with open('input.txt') as f:
 #    input = f.read()
 
 races = []
 
 if __name__ == "__main__":
     lines = input.splitlines()
-    times = lines[0].split(': ')[-1].split()
-    distances = lines[1].split(': ')[-1].split()
-<
+    times = lines[0].split(": ")[-1].split()
+    distances = lines[1].split(": ")[-1].split()
+
     for time, distance in zip(times, distances):
         races.append((int(time), int(distance)))
 

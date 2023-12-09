@@ -11,7 +11,7 @@ input = """LR
 22Z = (22B, 22B)
 XXX = (XXX, XXX)"""
 
-#with open('input.txt') as f:
+# with open('input.txt') as f:
 #    input = f.read()
 
 instructions = []
@@ -30,24 +30,23 @@ def get_next_instruction() -> int:
 
 
 if __name__ == "__main__":
-    instructions_string, nodes_string = input.split('\n\n')
-    instructions_string = instructions_string.replace(
-        'L', '0').replace('R', '1')
+    instructions_string, nodes_string = input.split("\n\n")
+    instructions_string = instructions_string.replace("L", "0").replace("R", "1")
     instructions = [int(i) for i in instructions_string]
 
     for line in nodes_string.splitlines():
-        key, values = line.split(' = ')
-        values = values.replace('(', '').replace(')', '')
-        nodes = values.split(', ')
+        key, values = line.split(" = ")
+        values = values.replace("(", "").replace(")", "")
+        nodes = values.split(", ")
         node_dict[key] = nodes
 
-    nodes = list(filter(lambda x: x[-1] == 'A', node_dict.keys()))
+    nodes = list(filter(lambda x: x[-1] == "A", node_dict.keys()))
     all_steps = []
 
     for node in nodes:
         instruction_index = 0
         steps = 0
-        while node[-1] != 'Z':
+        while node[-1] != "Z":
             next_instruction = get_next_instruction()
             node = node_dict[node][next_instruction]
             steps += 1

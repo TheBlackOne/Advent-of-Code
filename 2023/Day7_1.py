@@ -9,7 +9,7 @@ QQQJA 483"""
 # with open('input.txt') as f:
 #    input = f.read()
 
-labels = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2']
+labels = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
 
 # (num_groups, biggest_group)
 types = [
@@ -19,7 +19,7 @@ types = [
     (3, 3),  # Three of a kind
     (3, 2),  # Two pair
     (4, 2),  # One pair
-    (5, 1)  # High card
+    (5, 1),  # High card
 ]
 
 hands = []
@@ -42,9 +42,18 @@ if __name__ == "__main__":
         hand_type = determine_type(cards)
         hands.append((cards, bid, hand_type))
 
-    hands = sorted(hands,
-                   reverse=True,
-                   key=lambda x: (x[2], labels.index(x[0][0]), labels.index(x[0][1]), labels.index(x[0][2]), labels.index(x[0][3]), labels.index(x[0][4])))
+    hands = sorted(
+        hands,
+        reverse=True,
+        key=lambda x: (
+            x[2],
+            labels.index(x[0][0]),
+            labels.index(x[0][1]),
+            labels.index(x[0][2]),
+            labels.index(x[0][3]),
+            labels.index(x[0][4]),
+        ),
+    )
 
     winnings = 0
     for rank, hand in enumerate(hands):

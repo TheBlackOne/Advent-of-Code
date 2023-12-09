@@ -36,11 +36,12 @@ humidity-to-location map:
 60 56 37
 56 93 4"""
 
-#with open('input.txt') as f:
+# with open('input.txt') as f:
 #    input = f.read()
 
 seeds = []
 maps = {}
+
 
 def get_destination(source, mapping):
     destination = source
@@ -48,8 +49,9 @@ def get_destination(source, mapping):
         if source_start <= source and source <= source_start + num - 1:
             destination = source + destination_start - source_start
             return destination
-    
+
     return destination
+
 
 def task(args):
     seed_start, seed_range, _maps = args
@@ -58,15 +60,16 @@ def task(args):
     print(f"Seed start: {seed_start}, seed range: {seed_range}")
 
     for seed in range(seed_start, seed_start + seed_range):
-        #print(f"Seed: {seed}")
+        # print(f"Seed: {seed}")
         destination = seed
         for category_name, mapping in _maps.items():
             destination = get_destination(destination, mapping)
-            #print(f"{category_name}: {destination}")
-        
-        min_location = min(min_location, destination)        
+            # print(f"{category_name}: {destination}")
+
+        min_location = min(min_location, destination)
 
     return min_location
+
 
 if __name__ == "__main__":
     categories = input.split("\n\n")
@@ -80,11 +83,14 @@ if __name__ == "__main__":
 
     min_location = 9999999999999999999999
     with ProcessPoolExecutor(max_workers=10) as executor:
-    #with ThreadPool(processes=2) as pool:
-        seed_data = [(seed_start, seed_range, maps) for seed_start, seed_range in zip(*[iter(seeds)]*2)]
-        #for seed_start, seed_range in zip(*[iter(seeds)]*2):
+        # with ThreadPool(processes=2) as pool:
+        seed_data = [
+            (seed_start, seed_range, maps)
+            for seed_start, seed_range in zip(*[iter(seeds)] * 2)
+        ]
+        # for seed_start, seed_range in zip(*[iter(seeds)]*2):
         for result in executor.map(task, seed_data):
             print(f"Result: {result}")
             min_location = min(result, min_location)
-    
+
     print(f"Lowest location: {min_location}")

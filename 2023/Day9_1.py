@@ -21,7 +21,7 @@ if __name__ == "__main__":
         extrapolation_data.append(line_values)
 
         while True:
-            diffs = [y-x for (x, y) in pairwise(extrapolation_data[-1])]
+            diffs = [y - x for (x, y) in pairwise(extrapolation_data[-1])]
             extrapolation_data.append(diffs)
 
             if all(d == 0 for d in diffs):

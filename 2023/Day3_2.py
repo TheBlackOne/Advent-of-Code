@@ -28,23 +28,21 @@ def search_symbol(match, y):
             # print(f"{search_x} / {search_y}")
             if (search_x, search_y) in symbol_coords:
                 if (search_x, search_y) not in gear_candidates.keys():
-                    gear_candidates[(search_x, search_y)] = [
-                        int(match.group())]
+                    gear_candidates[(search_x, search_y)] = [int(match.group())]
                 else:
-                    gear_candidates[(search_x, search_y)].append(
-                        int(match.group()))
+                    gear_candidates[(search_x, search_y)].append(int(match.group()))
     # print("===========")
 
 
 def parse_part_numbers(line, y):
-    for match in list(re.finditer(r'\d+', line)):
+    for match in list(re.finditer(r"\d+", line)):
         search_symbol(match, y)
 
 
 if __name__ == "__main__":
     y = 0
     for line in input.splitlines():
-        for match in re.finditer(r'\*', line):
+        for match in re.finditer(r"\*", line):
             symbol_coords.append((match.start(), y))
         y += 1
 

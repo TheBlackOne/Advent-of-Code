@@ -8,19 +8,9 @@ xtwone3four
 zoneight234
 7pqrstsixteen"""
 
-numbers = [
-    "one",
-    "two",
-    "three",
-    "four",
-    "five",
-    "six",
-    "seven",
-    "eight",
-    "nine"
-]
+numbers = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
 
-numbers_string = '|'.join(numbers)
+numbers_string = "|".join(numbers)
 
 if __name__ == "__main__":
     sum = 0
@@ -31,7 +21,7 @@ if __name__ == "__main__":
         first = digits[0]
         last = digits[-1]
 
-        #print(f"{line} = {first} {last}")
+        # print(f"{line} = {first} {last}")
 
         if len(first) > 1:
             first = numbers.index(first) + 1

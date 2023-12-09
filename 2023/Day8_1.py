@@ -23,21 +23,20 @@ def get_next_instruction() -> int:
 
 
 if __name__ == "__main__":
-    instructions_string, nodes_string = input.split('\n\n')
-    instructions_string = instructions_string.replace(
-        'L', '0').replace('R', '1')
+    instructions_string, nodes_string = input.split("\n\n")
+    instructions_string = instructions_string.replace("L", "0").replace("R", "1")
     instructions = [int(i) for i in instructions_string]
 
     for line in nodes_string.splitlines():
-        key, values = line.split(' = ')
-        values = values.replace('(', '').replace(')', '')
-        nodes = values.split(', ')
+        key, values = line.split(" = ")
+        values = values.replace("(", "").replace(")", "")
+        nodes = values.split(", ")
         node_dict[key] = nodes
 
     steps = 0
-    node = 'AAA'
+    node = "AAA"
 
-    while node != 'ZZZ':
+    while node != "ZZZ":
         next_instruction = get_next_instruction()
         node = node_dict[node][next_instruction]
         steps += 1

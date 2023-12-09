@@ -1,5 +1,3 @@
-from tqdm import tqdm
-
 input = """Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
 Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19
 Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1
@@ -22,18 +20,17 @@ def process_card(card_list, card_index, card_counter):
     else:
         card_line = card_list[card_index]
 
-        header, numbers = card_line.split(': ')
+        header, numbers = card_line.split(": ")
         # print(f"Processing card {header}")
 
-        winning_numbers_string, your_numbers_string = numbers.split(' | ')
-        winning_numbers = set(filter(None, winning_numbers_string.split(' ')))
-        your_numbers = set(filter(None, your_numbers_string.split(' ')))
+        winning_numbers_string, your_numbers_string = numbers.split(" | ")
+        winning_numbers = set(filter(None, winning_numbers_string.split(" ")))
+        your_numbers = set(filter(None, your_numbers_string.split(" ")))
 
         num_winners = len(list(winning_numbers & your_numbers))
         num_winners_cache[card_index] = num_winners
 
-    new_card_indizes = list(
-        range(card_index + 1, card_index + num_winners + 1))
+    new_card_indizes = list(range(card_index + 1, card_index + num_winners + 1))
     for new_card_index in new_card_indizes:
         card_counter = process_card(card_list, new_card_index, card_counter)
 
@@ -43,7 +40,7 @@ def process_card(card_list, card_index, card_counter):
 if __name__ == "__main__":
     card_counter = 0
     card_list = input.splitlines()
-    for card_index in tqdm(range(0, len(card_list))):
+    for card_index in range(0, len(card_list)):
         card_counter = process_card(card_list, card_index, card_counter)
 
     print(f"Result: {card_counter}")

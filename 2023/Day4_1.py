@@ -12,10 +12,10 @@ if __name__ == "__main__":
     score = 0
 
     for line in input.splitlines():
-        header, numbers = line.split(': ')
-        winning_numbers_string, your_numbers_string = numbers.split(' | ')
-        winning_numbers = set(filter(None, winning_numbers_string.split(' ')))
-        your_numbers = set(filter(None, your_numbers_string.split(' ')))
+        header, numbers = line.split(": ")
+        winning_numbers_string, your_numbers_string = numbers.split(" | ")
+        winning_numbers = set(filter(None, winning_numbers_string.split(" ")))
+        your_numbers = set(filter(None, your_numbers_string.split(" ")))
 
         winners = list(winning_numbers & your_numbers)
         if len(winners) == 1:
