@@ -16,15 +16,6 @@ U 3 (#a77fa3)
 L 2 (#015232)
 U 2 (#7a21e3)"""
 
-# input = """R 7 #
-# D 4 #
-# L 3 #
-# U 1 #
-# L 2 #
-# D 1 #
-# L 2 #
-# U 4 #"""
-
 dir = path.dirname(__file__)
 input_path = path.join(dir, "input.txt")
 # with open(input_path) as f:
@@ -35,13 +26,7 @@ directions = {"3": (0, -1), "2": (-1, 0), "1": (0, 1), "0": (1, 0)}
 dig_plan = []
 
 
-def save_to_file():
-    with open("map.txt", "w") as f:
-        for line in map:
-            f.write("".join([c for c in line]))
-            f.write("\n")
-
-
+# https://en.wikipedia.org/wiki/Shoelace_formula#Example
 def shoelace(x_y):
     x_y = np.array(x_y, dtype=np.int64)
     x_y = x_y.reshape(-1, 2)
@@ -79,6 +64,7 @@ if __name__ == "__main__":
 
     dug_out = shoelace(polygon_corners)
 
-    dug_out = dug_out + (total_distance + 2) // 2
+    # Adjust area according to Pick's Theorem
+    dug_out = dug_out + 1 + total_distance // 2
 
     print(dug_out)
