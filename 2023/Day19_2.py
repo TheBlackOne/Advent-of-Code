@@ -1,5 +1,5 @@
 from os import path
-from copy import deepcopy
+from Utils import *
 
 input = """px{a<2006:qkq,m>2090:A,rfg}
 pv{a>1716:R,A}
@@ -40,7 +40,7 @@ def process_part_rec(rule_key, part):
         for rule in rules[rule_key]:
             if len(rule) == 1:
                 new_rule_key = rule[0]
-                process_part_rec(new_rule_key, deepcopy(part))
+                process_part_rec(new_rule_key, part)
             else:
                 field_key, condition, amount, destination = rule
                 current_field = part[field_key]
@@ -55,9 +55,8 @@ def process_part_rec(rule_key, part):
 
                 part[field_key] = current_field - new_field
 
-                new_part = deepcopy(part)
+                new_part = part.copy()
                 new_part[field_key] = new_field
-                part = deepcopy(part)
 
                 process_part_rec(destination, new_part)
 
@@ -96,9 +95,5 @@ if __name__ == "__main__":
     result = 0
     process_part_rec("in", part)
     for part in accepted_counters:
-        counter = 1
-        for field in part.values():
-            length = len(field)
-            counter *= length
-        result += counter
+        result += prod([len(f) for f in part.values()])
     print(result)
