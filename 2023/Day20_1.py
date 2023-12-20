@@ -119,7 +119,7 @@ if __name__ == "__main__":
 
     for _ in range(1000):
         button_module = Broadcaster("button", ["broadcaster"])
-        button_module.receive(0, None)
+        button_module.receive(0, "button")
         button_module.process()
 
         while process_queue:
