@@ -1,14 +1,15 @@
 from os import path
 
-input = """broadcaster -> a, b
-%a -> con
-%b -> con
-&con -> output"""
+input = """broadcaster -> a, b, c
+%a -> b
+%b -> c
+%c -> inv
+&inv -> a"""
 
 dir = path.dirname(__file__)
 input_path = path.join(dir, "input.txt")
-with open(input_path) as f:
-    input = f.read()
+# with open(input_path) as f:
+#    input = f.read()
 
 modules = {}
 signals_sent = {0: 0, 1: 0}
