@@ -1,15 +1,14 @@
 from os import path
 
-input = """broadcaster -> a
-%a -> inv, con
-&inv -> b
+input = """broadcaster -> a, b
+%a -> con
 %b -> con
 &con -> output"""
 
 dir = path.dirname(__file__)
 input_path = path.join(dir, "input.txt")
-# with open(input_path) as f:
-#    input = f.read()
+with open(input_path) as f:
+    input = f.read()
 
 modules = {}
 signals_sent = {0: 0, 1: 0}
@@ -18,27 +17,29 @@ process_queue = []
 
 
 class Module:
-    def __init__(self, name, output_modules):
+    def __init__(self, name, destination_modules):
         self.name = name
-        self.output_modules = output_modules
+        self.output_modules = destination_modules
         self.signal_to_send = None
 
     def print_line(self, destinaton_module_key):
         signal_name = "low"
         if self.signal_to_send == 1:
             signal_name = "high"
-        print(f"{self.name} -{signal_name}-> {destinaton_module_key}")
+        # print(f"{self.name} -{signal_name}-> {destinaton_module_key}")
 
-    def send(self, destinaton_module_key):
+    def send(self, destination_module_key):
         global signals_sent
 
-        # self.print_line(destinaton_module_key)
+        self.print_line(destination_module_key)
         signals_sent[self.signal_to_send] += 1
 
-        if destinaton_module_key in modules.keys():
-            module = modules[destinaton_module_key]
-            module.receive(self.signal_to_send, self.name)
-            process_queue.append(destinaton_module_key)
+        if destination_module_key in modules.keys():
+            module = modules[destination_module_key]
+            # module.receive(self.signal_to_send, self.name)
+            process_queue.append(
+                (destination_module_key, self.signal_to_send, self.name)
+            )
 
     def process(self):
         global signals_sent
@@ -118,13 +119,14 @@ if __name__ == "__main__":
 
     for _ in range(1000):
         button_module = Broadcaster("button", ["broadcaster"])
-        button_module.signal_to_send = 0
+        button_module.receive(0, None)
         button_module.process()
 
         while process_queue:
-            module_key = process_queue.pop(0)
+            module_key, signal_to_send, sender_name = process_queue.pop(0)
             module = modules[module_key]
-            result = module.process()
+            module.receive(signal_to_send, sender_name)
+            module.process()
 
         # print("========================")
 
