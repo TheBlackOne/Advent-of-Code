@@ -1,10 +1,10 @@
 from os import path
 
-input = """broadcaster -> a, b, c
-%a -> b
-%b -> c
-%c -> inv
-&inv -> a"""
+input = """broadcaster -> a
+%a -> inv, con
+&inv -> b
+%b -> con
+&con -> output"""
 
 dir = path.dirname(__file__)
 input_path = path.join(dir, "input.txt")
@@ -17,24 +17,43 @@ signals_sent = {0: 0, 1: 0}
 process_queue = []
 
 
-def print_line(name, signal, destination):
-    signal_name = "low"
-    if signal == 1:
-        signal_name = "high"
-    print(f"{name} -{signal_name}-> {destination}")
-
-
 class Module:
-    def __init__(self):
-        pass
-
-
-class Flipflop(Module):
     def __init__(self, name, output_modules):
         self.name = name
         self.output_modules = output_modules
         self.signal_to_send = None
+
+    def print_line(self, destinaton_module_key):
+        signal_name = "low"
+        if self.signal_to_send == 1:
+            signal_name = "high"
+        print(f"{self.name} -{signal_name}-> {destinaton_module_key}")
+
+    def send(self, destinaton_module_key):
+        global signals_sent
+
+        # self.print_line(destinaton_module_key)
+        signals_sent[self.signal_to_send] += 1
+
+        if destinaton_module_key in modules.keys():
+            module = modules[destinaton_module_key]
+            module.receive(self.signal_to_send, self.name)
+            process_queue.append(destinaton_module_key)
+
+    def process(self):
+        global signals_sent
+
+        if self.signal_to_send != None:
+            for destinaton_module_key in self.output_modules:
+                self.send(destinaton_module_key)
+
+        self.signal_to_send = None
+
+
+class Flipflop(Module):
+    def __init__(self, name, output_modules):
         self.on = False
+        super().__init__(name, output_modules)
 
     def receive(self, signal, _):
         if signal == 0:
@@ -45,25 +64,12 @@ class Flipflop(Module):
                 self.on = False
                 self.signal_to_send = 0
 
-    def process(self):
-        if self.signal_to_send != None:
-            for module_key in self.output_modules:
-                print_line(self.name, self.signal_to_send, module_key)
-                signals_sent[self.signal_to_send] += 1
-                if module_key in modules.keys():
-                    module = modules[module_key]
-                    process_queue.append(module_key)
-                    module.receive(self.signal_to_send, self.name)
-
-        self.signal_to_send = None
-
 
 class Conjunction(Module):
     def __init__(self, name, output_modules):
-        self.name = name
-        self.output_modules = output_modules
         self.input_signals = {}
         self.signal_to_send = None
+        super().__init__(name, output_modules)
 
     def add_input(self, module_key):
         self.input_signals[module_key] = 0
@@ -76,46 +82,17 @@ class Conjunction(Module):
         else:
             self.signal_to_send = 1
 
-    def process(self):
-        if self.signal_to_send != None:
-            for module_key in self.output_modules:
-                print_line(self.name, self.signal_to_send, module_key)
-                signals_sent[self.signal_to_send] += 1
-                if module_key in modules.keys():
-                    module = modules[module_key]
-                    process_queue.append(module_key)
-                    module.receive(self.signal_to_send, self.name)
-
-        self.signal_to_send = None
-
 
 class Broadcaster(Module):
-    def __init__(self, name, output_modules):
-        self.name = name
-        self.output_modules = output_modules
-        self.signal_to_send = None
-
     def receive(self, signal, _):
         self.signal_to_send = signal
-
-    def process(self):
-        if self.signal_to_send != None:
-            for module_key in self.output_modules:
-                print_line(self.name, self.signal_to_send, module_key)
-                signals_sent[self.signal_to_send] += 1
-                if module_key in modules.keys():
-                    module = modules[module_key]
-                    process_queue.append(module_key)
-                    module.receive(self.signal_to_send, self.name)
-
-        self.signal_to_send = None
 
 
 if __name__ == "__main__":
     sender_receiver = []
 
     for line in input.splitlines():
-        new_module = Module()
+        new_module = None
         module_key, receivers = line.split(" -> ")
         receivers = receivers.split(", ")
         if module_key == "broadcaster":
@@ -140,18 +117,16 @@ if __name__ == "__main__":
                     module.add_input(sender)
 
     for _ in range(1000):
-        signals_sent[0] += 1
-        modules["broadcaster"].receive(0, "button")
-        process_queue.append("broadcaster")
-        print_line("button", 0, "broadcaster")
-        print("button -0-> broadcaster")
+        button_module = Broadcaster("button", ["broadcaster"])
+        button_module.signal_to_send = 0
+        button_module.process()
 
         while process_queue:
             module_key = process_queue.pop(0)
             module = modules[module_key]
             result = module.process()
 
-        print("========================")
+        # print("========================")
 
     result = signals_sent[0] * signals_sent[1]
     print(result)
