@@ -16,18 +16,16 @@ input_path = path.join(dir, "input.txt")
 bricks = {}
 
 
-def get_support(brick_key, brick, down=False):
+def get_support(brick_key, block_coords, down=False):
     supportees = set()
-    brick_type, block_coords = brick
     test_z = max([c[-1] for c in block_coords]) + 1
 
     if down:
         test_z = min([c[-1] for c in block_coords]) - 1
     for x, y, _ in block_coords:
-        for test_brick_key, test_brick in bricks.items():
+        for test_brick_key, test_block_coords in bricks.items():
             if test_brick_key == brick_key:
                 continue
-            _, test_block_coords = test_brick
             if (x, y, test_z) in test_block_coords:
                 supportees.add(test_brick_key)
     return supportees
@@ -35,8 +33,7 @@ def get_support(brick_key, brick, down=False):
 
 def get_at_xy(brick_key, x, y):
     all_xyz = []
-    for test_brick_key, brick in bricks.items():
-        _, block_coords = brick
+    for test_brick_key, block_coords in bricks.items():
         if test_brick_key == brick_key:
             continue
         for block_x, block_y, block_z in block_coords:
@@ -45,10 +42,9 @@ def get_at_xy(brick_key, x, y):
     return all_xyz
 
 
-def try_fall_brick(brick_key, brick):
+def try_fall_brick(brick_key, block_coords):
     can_fall = False
 
-    _, block_coords = brick
     lowest_z = block_coords[0][2]
     if lowest_z > 1:
         can_all_blocks_fall = []
@@ -74,42 +70,28 @@ if __name__ == "__main__":
         start_x, start_y, start_z = [int(n) for n in start.split(",")]
         end_x, end_y, end_z = [int(n) for n in end.split(",")]
 
-        blocks = []
-        len_x = 0
+        block_coords = []
         for x in range(start_x, end_x + 1):
-            len_y = 0
             for y in range(start_y, end_y + 1):
-                len_z = 0
                 for z in range(start_z, end_z + 1):
                     block = (x, y, z)
-                    blocks.append(block)
-                    len_z += 1
-                len_y += 1
-            len_x += 1
+                    block_coords.append(block)
 
-        brick_type = None
-        if len_y > 1:
-            brick_type = "y"
-        elif len_z > 1:
-            brick_type = "z"
-        else:
-            brick_type = "x"
         brick_key = chr(ord("@") + i + 1)
-        bricks[brick_key] = (brick_type, blocks)
+        bricks[brick_key] = block_coords
 
     print("Settling bricks...")
     # Fall down all bricks
     while True:
         have_fallen = False
-        for brick_key, brick in bricks.items():
-            can_fall = try_fall_brick(brick_key, brick)
+        for brick_key, block_coords in bricks.items():
+            can_fall = try_fall_brick(brick_key, block_coords)
             if can_fall:
                 new_block_coords = []
-                brick_type, block_coords = brick
                 for x, y, z in block_coords:
                     z -= 1
                     new_block_coords.append((x, y, z))
-                bricks[brick_key] = (brick_type, new_block_coords)
+                bricks[brick_key] = new_block_coords
                 have_fallen = True
                 # print(f"Brick {brick_key} falls down by 1!")
         if not have_fallen:
