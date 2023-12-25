@@ -13,8 +13,8 @@ input = """19, 13, 30 @ -2,  1, -2
 
 dir = path.dirname(__file__)
 input_path = path.join(dir, "input.txt")
-# with open(input_path) as f:
-#    input = f.read()
+with open(input_path) as f:
+   input = f.read()
 
 hail_data = []
 
@@ -123,7 +123,7 @@ def chunk(it, size):
 def get_intersection_candidates(h1, h2):
     candidates = []
 
-    num_workers = 7
+    num_workers = 22
     test_range_x = range(-500, 500)
     test_range_y = test_range_x
     test_range_x_batch = chunk(test_range_x, len(test_range_x) // num_workers)
