@@ -42,12 +42,9 @@ def get_relevant_rules(page):
     return rules
 
 
-def check_update(update):
-    # right_order = True
+def check_update(pages):
     breaking_rule = None
-    # print(update)
 
-    pages = update.split(",")
     for page in pages:
         page_index = update.index(page)
         for rule in get_relevant_rules(page):
@@ -71,17 +68,16 @@ def check_update(update):
     return breaking_rule
 
 
-def fix_update(update, breaking_rule):
+def fix_update(pages, breaking_rule):
     first, second = breaking_rule
-    fixed_update = update.split(",")
-    first_index = fixed_update.index(first)
-    second_index = fixed_update.index(second)
+    first_index = pages.index(first)
+    second_index = pages.index(second)
 
-    fixed_update[first_index], fixed_update[second_index] = (
-        fixed_update[second_index],
-        fixed_update[first_index],
+    pages[first_index], pages[second_index] = (
+        pages[second_index],
+        pages[first_index],
     )
-    return ",".join(fixed_update)
+    return pages
 
 
 if __name__ == "__main__":
@@ -90,19 +86,19 @@ if __name__ == "__main__":
     rules = rules.splitlines()
 
     for update in updates.splitlines():
+        pages = update.split(",")
         check_counter = 0
 
         while True:
             check_counter += 1
-            breaking_rule = check_update(update)
+            breaking_rule = check_update(pages)
             if breaking_rule is not None:
-                update = fix_update(update, breaking_rule)
+                update = fix_update(pages, breaking_rule)
             else:
                 break
 
         if check_counter > 1:
             # print(update)
-            pages = update.split(",")
             middle = pages[len(pages) // 2]
             sum += int(middle)
 
