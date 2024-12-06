@@ -11,8 +11,8 @@ input = """....#.....
 #.........
 ......#..."""
 
-with open("input.txt") as f:
-    input = f.read()
+# with open("input.txt") as f:
+#    input = f.read()
 
 directions = [(0, -1), (1, 0), (0, 1), (-1, 0)]
 max_x = None
