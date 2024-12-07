@@ -1,3 +1,5 @@
+import math
+
 from tqdm import tqdm
 
 input = """190: 10 19
@@ -16,31 +18,25 @@ input = """190: 10 19
 valid_test_values = set()
 
 
-def process(operants, test_value):
-    global sum
-
-    if len(operants) > 1:
-        if operants[0] > test_value:
+def process(first, rest, length, test_value):
+    if length > 0:
+        if first > test_value or test_value in valid_test_values:
             return
 
-        plus_result = operants[0] + operants[1]
-        mul_result = operants[0] * operants[1]
-        concat_result = int(str(operants[0]) + str(operants[1]))
+        plus_result = first + rest[0]
+        mul_result = first * rest[0]
 
-        plus_list = operants[1:]
-        plus_list[0] = plus_result
+        # nice but does not speed things up
+        # concat_result = first * 10 ** math.ceil(math.log(rest[0], 10)) + rest[0]
+        concat_result = int(str(first) + str(rest[0]))
 
-        mul_list = operants[1:]
-        mul_list[0] = mul_result
+        length -= 1
 
-        concat_list = operants[1:]
-        concat_list[0] = concat_result
-
-        process(plus_list, test_value)
-        process(mul_list, test_value)
-        process(concat_list, test_value)
+        process(plus_result, rest[1:], length, test_value)
+        process(mul_result, rest[1:], length, test_value)
+        process(concat_result, rest[1:], length, test_value)
     else:
-        if operants[0] == test_value:
+        if first == test_value:
             valid_test_values.add(test_value)
 
 
@@ -50,6 +46,9 @@ if __name__ == "__main__":
         test_value = int(test_value)
         operants = list(map(int, operants.split()))
 
-        process(operants, test_value)
+        first = operants[0]
+        rest = operants[1:]
+        length = len(rest)
+        process(first, rest, length, test_value)
 
     print(sum(valid_test_values))
