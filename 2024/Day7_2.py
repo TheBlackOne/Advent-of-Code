@@ -45,7 +45,7 @@ def process(operants, test_value):
 
 
 if __name__ == "__main__":
-    for line in input.splitlines():
+    for line in tqdm(input.splitlines()):
         test_value, operants = line.split(": ")
         test_value = int(test_value)
         operants = list(map(int, operants.split()))
