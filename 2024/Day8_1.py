@@ -1,4 +1,5 @@
 import itertools
+from collections import defaultdict
 
 input = """............
 ........0...
@@ -18,21 +19,15 @@ input = """............
 
 
 if __name__ == "__main__":
-    antennas = {}
-
     input = input.splitlines()
     max_x = len(input[0])
     max_y = len(input)
+    limits = [range(max_x), range(max_y)]
 
-    lim_x = range(max_x)
-    lim_y = range(max_y)
-
+    antennas = defaultdict(list)
     for y, line in enumerate(input):
-        x = 0
         for x, c in enumerate(line):
             if c != ".":
-                if c not in antennas.keys():
-                    antennas[c] = []
                 antennas[c].append((x, y))
 
     antinode_coords = set()
@@ -45,7 +40,7 @@ if __name__ == "__main__":
             d = tuple(v2 - v1 for v1, v2 in zip(c1, c2))
 
             antinode = tuple(map(sum, zip(c2, d)))
-            if antinode[0] in lim_x and antinode[1] in lim_y:
+            if all(a in lim for a, lim in zip(antinode, limits)):
                 antinode_coords.add(antinode)
 
     print(len(antinode_coords))
