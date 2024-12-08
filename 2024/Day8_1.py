@@ -34,8 +34,6 @@ if __name__ == "__main__":
 
     for antenna_coords in antennas.values():
         for c1, c2 in itertools.permutations(antenna_coords, 2):
-            # print(f"{c1} {c2}")
-
             # (dx, dy)
             d = tuple(v2 - v1 for v1, v2 in zip(c1, c2))
 
