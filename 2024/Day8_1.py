@@ -38,15 +38,13 @@ if __name__ == "__main__":
     antinode_coords = set()
 
     for antenna_coords in antennas.values():
-        for c1, c2 in itertools.combinations(antenna_coords, 2):
+        for c1, c2 in itertools.permutations(antenna_coords, 2):
             # print(f"{c1} {c2}")
-            d = (c2[0] - c1[0], c2[1] - c1[1])
-            antinode = tuple(map(sum, zip(c2, d)))
-            if antinode[0] in lim_x and antinode[1] in lim_y:
-                antinode_coords.add(antinode)
 
-            d = tuple([c * -1 for c in d])
-            antinode = tuple(map(sum, zip(c1, d)))
+            # (dx, dy)
+            d = tuple(v2 - v1 for v1, v2 in zip(c1, c2))
+
+            antinode = tuple(map(sum, zip(c2, d)))
             if antinode[0] in lim_x and antinode[1] in lim_y:
                 antinode_coords.add(antinode)
 

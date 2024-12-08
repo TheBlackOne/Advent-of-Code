@@ -24,8 +24,7 @@ if __name__ == "__main__":
     max_x = len(input[0])
     max_y = len(input)
 
-    lim_x = range(max_x)
-    lim_y = range(max_y)
+    limits = [range(max_x), range(max_y)]
 
     for y, line in enumerate(input):
         x = 0
@@ -38,28 +37,19 @@ if __name__ == "__main__":
     antinode_coords = set()
 
     for antenna_coords in antennas.values():
-        for c1, c2 in itertools.combinations(antenna_coords, 2):
+        for coord1, coord2 in itertools.permutations(antenna_coords, 2):
             # print(f"{c1} {c2}")
 
-            # Manhattan distance
-            d = (c2[0] - c1[0], c2[1] - c1[1])
+            # (dx, dy)
+            d = tuple(e2 - e1 for e1, e2 in zip(coord1, coord2))
+            antinode = coord1
 
-            antinode = tuple(map(sum, zip(c1, d)))
             while True:
-                if antinode[0] in lim_x and antinode[1] in lim_y:
-                    antinode_coords.add(antinode)
-                else:
-                    break
                 antinode = tuple(map(sum, zip(antinode, d)))
 
-            # distance elements * -1
-            d = tuple([c * -1 for c in d])
-            antinode = tuple(map(sum, zip(c2, d)))
-            while True:
-                if antinode[0] in lim_x and antinode[1] in lim_y:
-                    antinode_coords.add(antinode)
-                else:
+                if any(a not in lim for a, lim in zip(antinode, limits)):
                     break
-                antinode = tuple(map(sum, zip(antinode, d)))
+
+                antinode_coords.add(antinode)
 
     print(len(antinode_coords))
