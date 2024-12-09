@@ -23,16 +23,20 @@ if __name__ == "__main__":
 
     # print("".join(map(str, file_map)))
 
-    num_free_spaces = file_map.count(".")
-
-    while num_free_spaces > 0:
-        last = file_map.pop()
-        if last != ".":
+    i = len(file_map) - 1
+    for file_id in file_map[::-1]:
+        if file_id != ".":
             first_free_index = file_map.index(".")
-            file_map[first_free_index] = last
-        num_free_spaces -= 1
+            if first_free_index < i:
+                file_map[first_free_index], file_map[i] = (
+                    file_map[i],
+                    file_map[first_free_index],
+                )
+            else:
+                break
+        i -= 1
 
         # print("".join(map(str, file_map)))
 
-    sum = sum(i * id for i, id in enumerate(file_map))
+    sum = sum(i * id for i, id in enumerate(file_map) if id != ".")
     print(sum)
