@@ -1,16 +1,27 @@
-import keyboard
+input = """##########
+#..O..O.O#
+#......O.#
+#.OO..O.O#
+#..O@..O.#
+#O#..O...#
+#O..O..O.#
+#.OO.O.OO#
+#....O...#
+##########
 
-input = """#######
-#.....#
-#.O#.##
-#@O...#
-#.....#
-#######
+<vv>^<v^>v>^vv^v>v<>v^v<v<^vv<<<^><<><>>v<vvv<>^v^>^<<<><<v<<<v^vv^v>^
+vvv<<^>^v^^><<>>><>^<<><^vv^^<>vvv<>><^^v>^>vv<>v<<<<v<^v>^<^^>>>^<v<v
+><>vv>v^v^<>><>>>><^^>vv>v<^^^>>v^v^<^^>v^^>v^<^v>v<>>v^v^<v>v^^<^^vv<
+<<v<^>>^^^^>>>v^<>vvv^><v<<<>^^^vv^<vvv>^>v<^^^^v<>^>vvvv><>>v^<<^^^^^
+^><^><>>><>^^<<^^v>>><^<v>^<vv>>v>>>^v><>^v><<<<v>>v<v<v>vvv>^<><<>^><
+^>><>^v<><^vvv<^^<><v<<<<<><^v<<<><<<^^<v<^^^><^>>^<v^><<<^>>^v<v^v<v^
+>^>>^v>vv>^<<^v<>><<><<v<<v><>v<^vv<<<>^^v^>^^>>><<^v>>v^v><^^>>^<>vv^
+<><^^>^^^<><vvvvv^v<v<<>^v<v>v<<^><<><<><<<^^<<<^<<>><<><^^^>^^<>^>v<>
+^^>vv<^v^v<vv>^<><v<^v>^^^>>>^^vvv^>vvv<>>>^<^>>>>>^<<^v>^vvv<>^<><<v>
+v^^>>><<^^<>>^v^<v^vv<>v^<<>^<^v^v><^<<<><<^<v><v<>vv>>v><v^<vv<>v^<<^"""
 
->>v>^^"""
-
-with open("input.txt") as f:
-    input = f.read()
+# with open("input.txt") as f:
+#   input = f.read()
 
 directions = {"^": (0, -1), "v": (0, 1), "<": (-1, 0), ">": (1, 0)}
 
@@ -25,6 +36,7 @@ def get_all_box_coords(grid):
 
 
 def print_grid(grid):
+    global screen
     for line in grid:
         line = "".join(line)
         print(line)
@@ -36,6 +48,7 @@ def get_grid_field(pos):
 
 
 def swap_grid_fields(pos1, pos2):
+    global screen
     global grid
 
     x1, y1 = pos1
@@ -51,7 +64,8 @@ def collect_box_candidates_vertical(pos, direction):
 
     candidates = []
 
-    while True:
+    keep_searching = True
+    while keep_searching:
         new_candidates = set()
         add_new_candidates = True
         for position in positions:
@@ -68,10 +82,11 @@ def collect_box_candidates_vertical(pos, direction):
                 new_candidates.add((x - 1, y))
             elif neighbour_field == "#":
                 candidates = []
+                keep_searching = False
                 add_new_candidates = False
                 break
         if len(new_candidates) == 0:
-            break
+            keep_searching = False
 
         positions = new_candidates
         if add_new_candidates:
@@ -115,17 +130,13 @@ if __name__ == "__main__":
                 new_line += "[]"
 
         grid.append(list(new_line))
+
     # print_grid(grid)
 
     movements = list(movements.replace("\n", ""))
 
-    # print(len(get_all_box_coords(grid)))
-
     step = 0
     for movement in movements:
-        # print("\033[H\033[xJ", end="")
-        # print_grid(grid)
-        # print(movement)
         direction = directions[movement]
         new_robot_pos = tuple(map(sum, zip(robot_pos, direction)))
 
@@ -152,17 +163,9 @@ if __name__ == "__main__":
             swap_grid_fields(robot_pos, new_robot_pos)
             robot_pos = new_robot_pos
 
-        # print(step)
-        # print("\033[H\033[xJ", end="")
-        # print_grid(grid)
-        # print(movement)
-
-        # keyboard.wait("space")
-
         step += 1
 
     # print_grid(grid)
     box_coords = get_all_box_coords(grid)
-    # print(len(box_coords))
     sum_coords = sum(x + y * 100 for x, y in box_coords)
     print(sum_coords)
