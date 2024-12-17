@@ -112,7 +112,7 @@ def cdv(operand, pointer):
     return pointer + 2
 
 
-def run_program(program, a_octal, counter):
+def run_program(program, a_octal):
     global a
     global instruction_map
     global output_buffer
@@ -150,7 +150,7 @@ if __name__ == "__main__":
         for a_octal in candidates:
             for x in range(8):
                 new_a_octal = a_octal + str(x)
-                program_result = run_program(program, new_a_octal, 0)
+                program_result = run_program(program, new_a_octal)
                 if program_string == program_result:
                     final_candidates.append(new_a_octal)
                 elif program_string.endswith(program_result):
