@@ -137,7 +137,6 @@ if __name__ == "__main__":
     instruction_map = {0: adv, 1: bxl, 2: bst, 3: jnz, 4: bxc, 5: out, 6: bdv, 7: cdv}
 
     output_buffer = []
-    final_candidates = []
 
     registers, program = input.split("\n\n")
     a, b, c = map(int, [r.split(": ")[-1] for r in registers.splitlines()])
@@ -151,10 +150,13 @@ if __name__ == "__main__":
             for x in range(8):
                 new_a_octal = a_octal + str(x)
                 program_result = run_program(program, new_a_octal)
-                if program_string == program_result:
-                    final_candidates.append(new_a_octal)
-                elif program_string.endswith(program_result):
-                    new_candidates.append(new_a_octal)
+
+                if counter == len(program) - 1:
+                    if program_result == program_string:
+                        new_candidates.append(new_a_octal)
+                else:
+                    if program_string.endswith(program_result):
+                        new_candidates.append(new_a_octal)
         candidates = new_candidates
         # print(candidates)
-    print(int(min(final_candidates), 8))
+    print(int(min(candidates), 8))
