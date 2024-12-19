@@ -16,23 +16,6 @@ bbrgwb"""
 
 
 @cache
-def match_design(design, index):
-    global available_patterns
-
-    if index == len(design):
-        return True
-
-    for pattern in available_patterns:
-        if design[index:].startswith(pattern):
-            new_index = index + len(pattern)
-            found = match_design(design, new_index)
-            if found:
-                return True
-
-    return False
-
-
-@cache
 def match_design_all(design, index, patterns):
     global available_patterns
 
