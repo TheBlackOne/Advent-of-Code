@@ -71,8 +71,8 @@ if __name__ == "__main__":
 
     for index, pos in enumerate(path):
         for found_index, end_pos in enumerate(
-            path[index + min_dist_saved - cheat_length :],
-            index + min_dist_saved - cheat_length,
+            path[index + min_dist_saved :],
+            index + min_dist_saved,
         ):
             dist = manhattan_distance(pos, end_pos)
             if dist <= cheat_length:
