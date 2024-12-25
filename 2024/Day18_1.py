@@ -53,7 +53,6 @@ def get_grid_field(pos, grid):
 
     x, y = pos
     if x in range(grid_size) and y in range(grid_size):
-        # if 0 < x < len(grid[0]) and 0 < y < len(grid):
         result = grid[y][x]
 
     return result
