@@ -8,23 +8,21 @@ input = """987654321111111
 
 joltage_sum = 0
 
+def next_battery(bank, num):
+    limit = len(bank) - num + 1
+    max_batt = max(bank[:limit])
+    pos = bank.index(max_batt)
+
+    if num == 1:
+        return str(max_batt)
+    else:
+        return str(max_batt) + next_battery(bank[pos + 1:], num - 1)
+
 if __name__ == "__main__":
     for line in input.splitlines():
         batteries = [int(b) for b in line]
-        batteries_on = []
-        max_pos = -1
-        for margin in reversed(range(12)):
-            batteries_temp = batteries[max_pos + 1:-margin]
-            if margin == 0:
-                batteries_temp = batteries[max_pos + 1:]
-            
-            max_battery = max(batteries_temp)
-            batteries_on.append(str(max_battery))
+        joltage = next_battery(batteries, 12)
 
-            # the start parameter is important here, it finds the wrong batteries otherwise
-            max_pos = batteries.index(max_battery, max_pos + 1)
-
-        joltage = int(''.join(batteries_on))
-        joltage_sum += joltage
+        joltage_sum += int(joltage)
 
 print(joltage_sum)
