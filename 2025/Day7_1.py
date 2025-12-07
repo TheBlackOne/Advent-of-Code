@@ -1,0 +1,43 @@
+input = """.......S.......
+...............
+.......^.......
+...............
+......^.^......
+...............
+.....^.^.^.....
+...............
+....^.^...^....
+...............
+...^.^...^.^...
+...............
+..^...^.....^..
+...............
+.^.^.^.^.^...^.
+..............."""
+
+#with open("input.txt") as f:
+#   input = f.read()
+
+if __name__ == "__main__":
+    manifold = [list(line) for line in input.splitlines()]
+    start_x = manifold[0].index('S')
+
+    positions = set([start_x])
+
+    answer = 0
+
+    for y in range(len(manifold) - 1):
+        new_positions = set()
+        for x in positions:
+            if manifold[y + 1][x] == '^':
+                new_positions.add(x - 1)
+                new_positions.add(x + 1)
+                answer += 1
+            else:
+                new_positions.add(x)
+                
+            for x in new_positions:
+                manifold[y + 1][x] = '|'
+        positions = new_positions
+
+    print(answer)
